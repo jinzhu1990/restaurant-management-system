@@ -1,0 +1,85 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="offset-md-1 col-md-3" [ngClass]="routeAnimationsElements" rtl>
+      <h2>Welcome to Our Restaurant!</h2>
+      <p>
+        We take pride in offering you a delightful dining experience filled with exquisite flavors and warm hospitality.
+      </p>
+      <p>
+        Indulge in our carefully crafted menu, featuring a wide range of delectable dishes prepared by our skilled chefs
+        using the finest ingredients.
+      </p>
+      <p>
+        Whether you're joining us for a special occasion or a casual meal, our cozy ambiance and attentive service will
+        ensure a memorable time.
+      </p>
+      <p>
+        <code rtl>Join us</code> and savor the essence of culinary perfection at our restaurant.
+      </p>
+      <br>
+    </div>
+    <ng-container *ngIf="tables$ | async as tables">
+      <div class="col-md-8">
+        <h3 class="dotos-title" rtl>
+          <span>Our Restaurant Table Lists</span>
+          <button class="tables-filter" mat-icon-button [matMenuTriggerFor]="sitFilter">
+            <fa-icon icon="filter"></fa-icon>
+          </button>
+          <mat-menu class="tables-filter-menu-overlay" #sitFilter="matMenu" xPosition="before">
+            <button *ngFor="let sit of sits" mat-menu-item (click)="onFilterSit(sit)"
+              [class.active]="(sitFilter$ | async) === sit" rtl>
+              <span>{{sit}}</span>
+            </button>
+          </mat-menu>
+          <mat-chip-list class="tables-filter-info d-none d-sm-block d-md-none d-lg-block">
+            <mat-chip [disabled]=true>
+              Sit
+            </mat-chip>
+          </mat-chip-list>
+          <button class="tables-filter" mat-icon-button [matMenuTriggerFor]="tablesFilter">
+            <fa-icon icon="filter"></fa-icon>
+          </button>
+          <mat-menu class="tables-filter-menu-overlay" #tablesFilter="matMenu" xPosition="before">
+            <button mat-menu-item (click)="onFilterTables('ALL')" [class.active]="(statusFilter$ | async) === 'ALL'"
+              rtl>
+              <mat-icon>
+                <fa-icon icon="tasks"></fa-icon>
+              </mat-icon>
+              <span>ALL</span>
+            </button>
+            <button mat-menu-item (click)="onFilterTables('RESERVED')"
+              [class.active]="(statusFilter$ | async) === 'RESERVED'">
+              <mat-icon>
+                <fa-icon icon="check"></fa-icon>
+              </mat-icon>
+              <span>RESERVED</span>
+            </button>
+            <button mat-menu-item (click)="onFilterTables('EMPTY')"
+              [class.active]="(statusFilter$ | async) === 'EMPTY'">
+              <mat-icon>
+                <fa-icon icon="square"></fa-icon>
+              </mat-icon>
+              <span>EMPTY</span>
+            </button>
+          </mat-menu>
+          <mat-chip-list class="tables-filter-info d-none d-sm-block d-md-none d-lg-block">
+            <mat-chip [disabled]=true>
+              Status
+            </mat-chip>
+          </mat-chip-list>
+        </h3>
+        <mat-card *ngFor="let table of tables" class="table" [ngClass]="routeAnimationsElements">
+          <span class="table-label" [ngClass]="{ 'table-label-done': table.reserved }">
+            &nbsp;{{ table.location }} ({{ table.sit }} sits) &nbsp;
+          </span>
+          <button [ngClass]="'btn-reserve'" *ngIf="!table.reserved" (click)="onReserve(table.id)">Reserve</button>
+          <button [ngClass]="'btn-cancel'" *ngIf="table.reserved" (click)="onReserve(table.id)">Cancel</button>
+        </mat-card>
+
+        <br>
+        <br>
+      </div>
+    </ng-container>
+  </div>
+
+</div>
